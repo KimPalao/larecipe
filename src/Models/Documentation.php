@@ -95,7 +95,15 @@ class Documentation
     {
         $content = str_replace('{{version}}', $version, $content);
 
-        $content = str_replace('{{route}}', trim(config('larecipe.docs.route'), '/'), $content);
+        $link = config('larecipe.docs.route');
+        if ($app_url = getenv('APP_URL')) {
+            $route_string = '/{{route}}';
+            $link = $app_url . $link;
+        } else {
+            $route_string = '{{route}}';
+        }
+
+        $content = str_replace($route_string, trim($link, '/'), $content);
 
         $content = str_replace('"#', '"'.request()->getRequestUri().'#', $content);
 
